@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Calculator</title>
+  <style>
+    .calculator {
+      background: #5b4cd5;
+      width: 200px;
+      padding: 10px;
+      border-radius: 15px;
+      margin: 50px auto;
+    }
+
+    .screen {
+      background: white;
+      height: 40px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      text-align: right;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    .row {
+      display: flex;
+      margin-bottom: 5px;
+    }
+
+    .key {
+      background: #bdb2f7;
+      flex: 1;
+      margin: 2px;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .operator {
+      background: orange;
+      color: white;
+    }
+
+    .special {
+      background: #f05454;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="screen">0</div>
+
+    <div class="row">
+      <div class="key">1</div>
+      <div class="key">2</div>
+      <div class="key">3</div>
+      <div class="key operator">+</div>
+    </div>
+    <div class="row">
+      <div class="key">4</div>
+      <div class="key">5</div>
+      <div class="key">6</div>
+      <div class="key operator">x</div>
+    </div>
+    <div class="row">
+      <div class="key">7</div>
+      <div class="key">8</div>
+      <div class="key">9</div>
+      <div class="key operator">-</div>
+    </div>
+    <div class="row">
+      <div class="key special">AC</div>
+      <div class="key">0</div>
+      <div class="key operator">=</div>
+      <div class="key operator">÷</div>
+    </div>
+  </div>
+</body>
+</html>
