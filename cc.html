@@ -2,81 +2,216 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Simple Calculator</title>
+  <title>Pro Business Card Generator</title>
   <style>
-    .calculator {
-      background: #5b4cd5;
-      width: 200px;
-      padding: 10px;
-      border-radius: 15px;
-      margin: 50px auto;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-    .screen {
-      background: white;
-      height: 40px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      text-align: right;
-      padding: 10px;
-      font-size: 18px;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    .row {
-      display: flex;
-      margin-bottom: 5px;
-    }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #0f0c29;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: #fff;
+  min-height: 100vh;
+}
 
-    .key {
-      background: #bdb2f7;
-      flex: 1;
-      margin: 2px;
-      text-align: center;
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  padding: 50px 20px;
+}
 
-    .operator {
-      background: orange;
-      color: white;
-    }
+.form-box {
+  background: rgba(255,255,255,0.05);
+  padding: 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  width: 350px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
 
-    .special {
-      background: #f05454;
-      color: white;
-    }
+.form-box h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.form-box input, .form-box select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+}
+
+.form-box button {
+  width: 100%;
+  padding: 14px;
+  background: #ff416c;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.form-box button:hover {
+  background: #ff4b2b;
+}
+
+.preview-box {
+  display: flex;
+  align-items: center;
+}
+
+.card {
+  position: relative;
+  width: 340px;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+}
+
+.card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  margin-bottom: 15px;
+}
+
+.card h2 {
+  margin-bottom: 6px;
+  font-size: 22px;
+}
+
+.card p {
+  margin: 3px 0;
+  font-size: 14px;
+}
+
+.card-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: -1;
+  border-radius: 20px;
+  opacity: 0.6;
+}
+
+/* Design Themes */
+
+.design1 .card-bg {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+}
+
+.design2 .card-bg {
+  background: linear-gradient(135deg, #00b09b, #96c93d);
+}
+
+.design3 .card-bg {
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+}
+
+.design4 .card-bg {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.design5 .card-bg {
+  background: linear-gradient(135deg, #232526, #414345);
+}
+
+footer {
+  text-align: center;
+  margin: 40px 0 20px;
+  font-size: 14px;
+  color: #aaa;
+  }
   </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="calculator">
-    <div class="screen">0</div>
 
-    <div class="row">
-      <div class="key">1</div>
-      <div class="key">2</div>
-      <div class="key">3</div>
-      <div class="key operator">+</div>
+  <section class="container">
+    <div class="form-box">
+      <h1>🖥️ Create Your Business Card</h1>
+      <input type="text" id="name" placeholder="Full Name">
+      <input type="text" id="title" placeholder="Job Title">
+      <input type="text" id="phone" placeholder="Phone Number">
+      <input type="email" id="email" placeholder="Email">
+      
+      <label>Select Design</label>
+      <select id="theme">
+        <option value="design1">Royal Blue</option>
+        <option value="design2">Neon Green</option>
+        <option value="design3">Sunset Orange</option>
+        <option value="design4">Glassmorphism</option>
+        <option value="design5">Dark Mode</option>
+      </select>
+      
+      <label>Upload Photo</label>
+      <input type="file" id="photo" accept="image/*">
+      
+      <button onclick="generateCard()">Generate Card</button>
+      <button onclick="downloadCard()" class="download-btn">Download Card</button>
     </div>
-    <div class="row">
-      <div class="key">4</div>
-      <div class="key">5</div>
-      <div class="key">6</div>
-      <div class="key operator">x</div>
+
+    <div class="preview-box">
+      <div id="card" class="card design1">
+        <div class="card-bg"></div>
+        <img id="cardPhoto" src="https://via.placeholder.com/100" alt="Photo">
+        <h2 id="cardName">Your Name</h2>
+        <p id="cardTitle">Your Title</p>
+        <p><span id="cardPhone">+91 00000 00000</span></p>
+        <p><span id="cardEmail">you@example.com</span></p>
+      </div>
     </div>
-    <div class="row">
-      <div class="key">7</div>
-      <div class="key">8</div>
-      <div class="key">9</div>
-      <div class="key operator">-</div>
-    </div>
-    <div class="row">
-      <div class="key special">AC</div>
-      <div class="key">0</div>
-      <div class="key operator">=</div>
-      <div class="key operator">÷</div>
-    </div>
-  </div>
+  </section>
+
+  <footer>
+    <p>✨ Created by You | 2025</p>
+  </footer>
+
+  <!-- html2canvas CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    function generateCard() {
+  document.getElementById("cardName").innerText = document.getElementById("name").value || "Your Name";
+  document.getElementById("cardTitle").innerText = document.getElementById("title").value || "Your Title";
+  document.getElementById("cardPhone").innerText = document.getElementById("phone").value || "+91 00000 00000";
+  document.getElementById("cardEmail").innerText = document.getElementById("email").value || "you@example.com";
+
+  let theme = document.getElementById("theme").value;
+  let card = document.getElementById("card");
+
+  card.className = `card ${theme}`;
+
+  let photo = document.getElementById("photo").files[0];
+  if(photo){
+    let reader = new FileReader();
+    reader.onload = function(e){
+      document.getElementById("cardPhoto").src = e.target.result;
+    }
+    reader.readAsDataURL(photo);
+  }
+    }
+  </script>
 </body>
 </html>
+
