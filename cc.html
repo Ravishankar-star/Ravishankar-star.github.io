@@ -185,33 +185,43 @@ footer {
 
   <footer>
     <p>✨ Created by You | 2025</p>
-  </footer>
-
   <!-- html2canvas CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="script.js"></script>
-  <script>
-    function generateCard() {
-  document.getElementById("cardName").innerText = document.getElementById("name").value || "Your Name";
-  document.getElementById("cardTitle").innerText = document.getElementById("title").value || "Your Title";
-  document.getElementById("cardPhone").innerText = document.getElementById("phone").value || "+91 00000 00000";
-  document.getElementById("cardEmail").innerText = document.getElementById("email").value || "you@example.com";
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  let theme = document.getElementById("theme").value;
-  let card = document.getElementById("card");
+<script>
+  function generateCard() {
+    document.getElementById("cardName").innerText = document.getElementById("name").value || "Your Name";
+    document.getElementById("cardTitle").innerText = document.getElementById("title").value || "Your Title";
+    document.getElementById("cardPhone").innerText = document.getElementById("phone").value || "+91 00000 00000";
+    document.getElementById("cardEmail").innerText = document.getElementById("email").value || "you@example.com";
 
-  card.className = `card ${theme}`;
+    let theme = document.getElementById("theme").value;
+    let card = document.getElementById("card");
 
-  let photo = document.getElementById("photo").files[0];
-  if(photo){
-    let reader = new FileReader();
-    reader.onload = function(e){
-      document.getElementById("cardPhoto").src = e.target.result;
+    card.className = `card ${theme}`;
+
+    let photo = document.getElementById("photo").files[0];
+    if(photo){
+      let reader = new FileReader();
+      reader.onload = function(e){
+        document.getElementById("cardPhoto").src = e.target.result;
+      }
+      reader.readAsDataURL(photo);
+    } else {
+      document.getElementById("cardPhoto").src = "";
     }
-    reader.readAsDataURL(photo);
   }
-    }
-  </script>
+
+  function downloadCard() {
+    const card = document.getElementById('card');
+    html2canvas(card).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'business-card.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  }
+</script>
 </body>
 </html>
 
