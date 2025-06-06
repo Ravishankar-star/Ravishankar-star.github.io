@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Luxury Developer Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <style>
     * {
       margin: 0;
@@ -87,21 +88,24 @@
       margin-bottom: 25px;
       text-align: center;
     }
-    .about p, .contact p {
+    .about p,
+    .contact p {
       font-size: 16px;
       color: #bbb;
       max-width: 800px;
       margin: 0 auto;
       text-align: center;
     }
-    .skills, .projects {
+    .skills,
+    .projects {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
       max-width: 1000px;
       margin: 0 auto;
     }
-    .skill, .project {
+    .skill,
+    .project {
       background: #111;
       padding: 18px;
       border: 1px solid #333;
@@ -109,9 +113,24 @@
       transition: 0.3s;
       text-align: center;
     }
-    .skill:hover, .project:hover {
+    .skill:hover,
+    .project:hover {
       border-color: gold;
       transform: translateY(-5px);
+    }
+    .project a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 14px;
+      background: gold;
+      color: #000;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    .project a:hover {
+      background: #daa520;
     }
     .contact-links {
       margin-top: 20px;
@@ -169,11 +188,9 @@
         margin-bottom: 10px;
       }
     }
-
   </style>
 </head>
 <body>
-
   <header>
     <h1>Ravi Shankar</h1>
     <nav>
@@ -181,22 +198,29 @@
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
+      <a href="cc.html" target="_blank">Business Card</a>
     </nav>
   </header>
 
   <section class="hero">
     <div class="hero-text">
-      <h2>Hi, I'm Ravi<br>Full Stack Developer</h2>
+      <h2>Hi, I'm Ravi<br />Full Stack Developer</h2>
       <p>I build modern, responsive web applications with passion and precision.</p>
     </div>
     <div class="hero-image">
-      <img src="https://ih1.redbubble.net/image.4920229149.3490/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg" alt="Ravi Profile">
+      <img
+        src="https://ih1.redbubble.net/image.4920229149.3490/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+        alt="Ravi Profile"
+      />
     </div>
   </section>
 
   <section id="about" class="about">
     <h2 class="section-title">About Me</h2>
-    <p>I am a 16-year-old fresher actor and full stack developer based in Ambala, Haryana. I love crafting beautiful web experiences.</p>
+    <p>
+      I am a 16-year-old fresher actor and full stack developer based in Ambala, Haryana. I love
+      crafting beautiful web experiences.
+    </p>
   </section>
 
   <section id="skills">
@@ -217,6 +241,7 @@
       <div class="project">
         <h3>Digital Business Card Generator</h3>
         <p>A dynamic card generator with shareable QR and stylish UI.</p>
+        <a href="cc.html" target="_blank">Open Project</a>
       </div>
       <div class="project">
         <h3>Portfolio Website</h3>
@@ -231,17 +256,14 @@
 
     <div class="contact-links">
       <a href="https://instagram.com/ravishankar_89" target="_blank">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/instagram.svg" alt="Instagram"> @ravishankar_89
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/instagram.svg" alt="Instagram" /> @ravishankar_89
       </a>
       <a href="tel:+917494849585">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/whatsapp.svg" alt="Phone"> +91 74948 49585
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v10/icons/whatsapp.svg" alt="Phone" /> +91 74948 49585
       </a>
     </div>
   </section>
 
-  <footer>
-    &copy; 2025 Ravi Shankar. All rights reserved.
-  </footer>
-
+  <footer>&copy; 2025 Ravi Shankar. All rights reserved.</footer>
 </body>
 </html>
