@@ -1,87 +1,173 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Student Report Card</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #eef2f3;
-        }
-
-        .report-card {
-            width: 500px;
-            margin: 50px auto;
-            border: 4px double #4CAF50;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 15px;
-        }
-
-        h2 {
-            text-align: center;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 2px solid #4CAF50;
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #d4edda;
-        }
-
-        .footer {
-            text-align: right;
-            margin-top: 20px;
-            border-top: 1px dashed #aaa;
-            padding-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>YouTube Clone | Music Shows</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+    }
+    header {
+      background: #202020;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header img {
+      height: 40px;
+    }
+    .search-bar {
+      display: flex;
+    }
+    .search-bar input {
+      padding: 8px;
+      width: 300px;
+      border: none;
+      border-radius: 20px 0 0 20px;
+      background: #303030;
+      color: white;
+    }
+    .search-bar button {
+      padding: 8px 20px;
+      border: none;
+      background: #404040;
+      color: white;
+      border-radius: 0 20px 20px 0;
+      cursor: pointer;
+    }
+    aside {
+      width: 220px;
+      background: #181818;
+      height: 100vh;
+      position: fixed;
+      top: 60px;
+      padding-top: 20px;
+    }
+    aside button {
+      display: block;
+      width: 100%;
+      padding: 15px 20px;
+      background: none;
+      border: none;
+      color: white;
+      text-align: left;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    aside button:hover {
+      background: #282828;
+    }
+    main {
+      margin-left: 230px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .video-card {
+      background: #1c1c1c;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: .3s;
+    }
+    .video-card:hover {
+      transform: scale(1.03);
+    }
+    .video-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .video-info {
+      padding: 10px;
+    }
+    .video-info h4 {
+      margin: 0;
+      font-size: 15px;
+    }
+    .video-info p {
+      color: #aaa;
+      margin-top: 5px;
+      font-size: 13px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 50px;
+      color: #888;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="report-card">
-        <h2>Student Report Card</h2>
-        <p><strong>Name:</strong> Ravi Shankar</p>
-        <p><strong>Class:</strong> 10th</p>
-        <p><strong>School:</strong> Ambala Public School</p>
+<header>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube">
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search Music Shows...">
+    <button onclick="searchVideo()">Search</button>
+  </div>
+</header>
 
-        <table>
-            <tr>
-                <th>Subject</th>
-                <th>Marks</th>
-            </tr>
-            <tr>
-                <td>Math</td>
-                <td>92</td>
-            </tr>
-            <tr>
-                <td>Science</td>
-                <td>88</td>
-            </tr>
-            <tr>
-                <td>English</td>
-                <td>85</td>
-            </tr>
-            <tr>
-                <td>Social Science</td>
-                <td>90</td>
-            </tr>
-        </table>
+<aside>
+  <button>🏠 Home</button>
+  <button>🔥 Trending</button>
+  <button>🎬 Movies</button>
+  <button>🎵 Music</button>
+  <button>📺 Live</button>
+  <button>📚 Library</button>
+  <button>🕒 History</button>
+</aside>
 
-        <div class="footer">
-            <strong>Total:</strong> 355 / 400
-        </div>
+<main>
+  <div class="video-card">
+    <img src="https://placehold.co/400x200/FF0000/FFF?text=Arijit+Singh+Live" alt="">
+    <div class="video-info">
+      <h4>Arijit Singh Live Concert 2024</h4>
+      <p>MusicWorld • 3.5M views • 1 day ago</p>
     </div>
+  </div>
+  <div class="video-card">
+    <img src="https://placehold.co/400x200/CC0000/FFF?text=Shreya+Ghoshal+Hits" alt="">
+    <div class="video-info">
+      <h4>Shreya Ghoshal Top Songs</h4>
+      <p>Bollywood Beats • 2.1M views • 3 days ago</p>
+    </div>
+  </div>
+  <div class="video-card">
+    <img src="https://placehold.co/400x200/AA0000/FFF?text=Neha+Kakkar+Show" alt="">
+    <div class="video-info">
+      <h4>Neha Kakkar Night Live 2024</h4>
+      <p>Star Music • 4.8M views • 5 hours ago</p>
+    </div>
+  </div>
+  <div class="video-card">
+    <img src="https://placehold.co/400x200/DD0000/FFF?text=KK+Memorial+Show" alt="">
+    <div class="video-info">
+      <h4>KK Tribute Concert</h4>
+      <p>Legends Live • 6.5M views • 2 days ago</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Created with ❤️ by <strong>[Ravi Shankar]</strong>
+</footer>
+
+<script>
+  function searchVideo() {
+    let query = document.getElementById('searchInput').value;
+    alert('You searched for: ' + query);
+  }
+</script>
 
 </body>
 </html>
