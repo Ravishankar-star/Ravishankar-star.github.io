@@ -1033,7 +1033,9 @@
               <div style="font-size:1.1rem;margin-bottom:8px;"><b>Director:</b> ${movie.director || 'N/A'}</div>
               <div style="font-size:1.1rem;margin-bottom:8px;"><b>Cast:</b> ${cast}</div>
               <div class="movie-actions" style="justify-content:center;margin-top:18px;">
-                <button onclick="openTrailer('${movie.trailer}','${movie.title}')">▶ Watch Trailer</button>
+                <button onclick="openTrailer('${movie.trailer}','${movie.title}')" style="background-color: #ff2e2e; color:white; padding: 10px 20px; border:none; border-radius:8px; font-weight: bold; cursor: ponter; box-shadow: 0 4px 10px rgba(255,0,0,0.4); transition: transform 0.2s;"
+                onmouseover="this.style.transform='scale(1.05)'"
+                onmouseout="this.style.transform='scale(1)'">▶ Watch Trailer</button>
               </div>
             </div>
           </div>
