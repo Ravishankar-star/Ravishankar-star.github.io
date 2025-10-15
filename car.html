@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CarDekho Clone (Firebase) — Streamlined</title>
+
+  <!-- Google fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#eef2f7;
+      --card:#ffffff;
+      --accent:#ff3b3b;
+      --accent-2:#ff8b5c;
+      --muted:#6b7280;
+      --glass: rgba(255,255,255,0.6);
+      --shadow: 0 8px 30px rgba(20,20,30,0.06);
+      --glass-2: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+    }
+    *{box-sizing:border-box;font-family:'Poppins',sans-serif}
+    body{margin:0;background:linear-gradient(180deg,#f7f8fb,#eef2f7);color:#111}
+    /* NAV */
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 28px;background:transparent;position:sticky;top:0;z-index:50;
+      /* removed blur as requested: backdrop-filter: blur(6px); */
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;
+      box-shadow:0 10px 30px rgba(255,80,80,0.12);
+    }
+    .brand h1{margin:0;font-size:18px}
+    .nav-right{display:flex;gap:12px;align-items:center}
+    .btn{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:800;
+      box-shadow: 0 10px 30px rgba(255,59,59,0.14);letter-spacing:.4px;transition:transform .16s,box-shadow .16s,opacity .16s;
+    }
+    .btn:hover{transform:translateY(-3px);box-shadow:0 18px 48px rgba(255,59,59,0.16)}
+    .btn.ghost{background:#fff;color:#111;border:1px solid rgba(10,20,30,0.04);box-shadow:none}
+    .btn.login{background:linear-gradient(90deg,#06b6d4,#3b82f6);box-shadow:0 10px 30px rgba(59,130,246,0.12)}
+    .btn.signup{background:linear-gradient(90deg,#8b5cf6,#06b6d4);box-shadow:0 10px 30px rgba(139,92,246,0.12)}
+    .user-badge{display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-size:12px;color:var(--muted);min-width:160px}
+    .user-badge .email{font-weight:700;color:#0f172a}
+    .user-badge .last{font-size:12px;color:var(--muted)}
+    /* small helper for last-signup in side panel */
+    .last-signup { font-weight:700; color:#0f172a; font-size:13px }
+
+    /* modal small polish */
+    .modal { transition: transform .18s ease, opacity .18s ease }
+    .modal.show { transform: translateY(0); opacity: 1; }
+
+    .container{max-width:1180px;margin:20px auto;padding:0 18px}
+    .hero{
+      display:grid;grid-template-columns:1fr 360px;gap:18px;margin-bottom:20px;align-items:center;
+    }
+    .search-card{
+      background:var(--card);padding:22px;border-radius:14px;box-shadow:var(--shadow);
+    }
+    .search-row{display:flex;gap:10px;flex-wrap:wrap}
+    .search-row input, .search-row select{
+      padding:12px;border-radius:10px;border:1px solid #eef2f7;flex:1;min-width:140px;
+      background:linear-gradient(180deg,#fff,#fbfbfd);
+    }
+    .filters{display:flex;gap:10px;align-items:center;margin-top:12px;}
+    .filters .chip{padding:8px 12px;border-radius:999px;background:#f7fafc;border:1px solid #eef2f7;color:var(--muted);cursor:pointer;font-weight:600}
+    /* category tabs */
+    .category-tabs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .tab{
+      padding:8px 12px;border-radius:999px;background:transparent;border:1px solid transparent;color:var(--muted);cursor:pointer;font-weight:600;
+    }
+    .tab.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 8px 24px rgba(255,80,80,0.08)}
+    /* main grid */
+    .layout{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{
+      background:linear-gradient(180deg,#ffffff,#fff);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:transform .18s;border:1px solid #f1f5f9;
+    }
+    .card:hover{transform:translateY(-8px)}
+    .card .img{
+      height:180px;background:#ddd;background-size:cover;background-position:center;border-bottom-left-radius:0;border-bottom-right-radius:0
+    }
+    /* style additions for nicer card visuals */
+    .card .img::after{
+      /* removed the dark overlay so images are shown without the black mark */
+      /* previous overlay removed on purpose */
+      display: none;
+    }
+    /* ensure image container positions overlay */
+    .card .img{ position:relative; }
+    /* price ribbon */
+    .price-ribbon{
+      position:absolute;right:12px;top:12px;background:rgba(0,0,0,0.6);color:#fff;padding:8px 10px;border-radius:8px;font-weight:800;font-size:13px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.12);
+    }
+    .card .info{padding:16px}
+    .card h3{margin:0;font-size:16px}
+    .meta{display:flex;justify-content:space-between;margin-top:8px;color:var(--muted);font-size:13px}
+    .price{color:var(--accent);font-weight:800}
+    .badge{display:inline-block;padding:6px 8px;border-radius:999px;font-weight:700;font-size:12px;color:#fff}
+    .badge.car{background:linear-gradient(90deg,#3b82f6,#06b6d4)}
+    .badge.bike{background:linear-gradient(90deg,#f97316,#fb7185)}
+    .badge.charter{background:linear-gradient(90deg,#8b5cf6,#06b6d4)}
+    .badge.plane{background:linear-gradient(90deg,#ef4444,#fb7185)}
+    .side-panel{position:sticky;top:90px;background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)}
+    .small{font-size:13px;color:var(--muted)}
+    /* modal tweaks */
+    .modal{width:720px;background:var(--card);border-radius:12px;padding:18px;box-shadow:0 10px 40px rgba(10,10,20,0.25)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .form-grid input, .form-grid select, .form-grid textarea{padding:10px;border-radius:8px;border:1px solid #eef2f7;width:100%}
+    .row{display:flex;gap:8px;margin-top:10px}
+    /* ===== Section banners & layout tweaks ===== */
+    .section-hero{
+      border-radius:12px;padding:18px;background:linear-gradient(180deg,#0f172a,#0b1220);color:#fff;margin:18px 0 8px 0;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .section-hero .title{font-size:18px;font-weight:800;letter-spacing:0.4px}
+    .section-hero .desc{opacity:0.85;font-size:13px}
+    .section-area{margin-bottom:20px}
+    .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media (max-width:1200px){ .cards-grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:720px){ .cards-grid{grid-template-columns:1fr} }
+
+    /* ===== Auth full-screen page ===== */
+    .auth-page{
+      position:fixed;inset:0;display:none;z-index:120;background:linear-gradient(180deg,rgba(6,8,20,0.95),rgba(6,8,20,0.98));
+      align-items:center;justify-content:center;padding:28px;
+    }
+    .auth-panel{
+      width:920px;max-width:95%;background:linear-gradient(180deg,#fff,#fbfdff);border-radius:16px;padding:28px;box-shadow:0 20px 60px rgba(2,6,23,0.6);display:flex;gap:20px;overflow:hidden;
+    }
+    .auth-left{flex:1;display:flex;flex-direction:column;gap:12px;justify-content:space-between}
+    .auth-right{width:420px;max-width:44%;display:flex;flex-direction:column;gap:12px}
+    .auth-hero{background:linear-gradient(135deg,#0f172a,#071124);color:#fff;padding:18px;border-radius:12px;display:flex;flex-direction:column;gap:10px}
+    .auth-hero h2{margin:0;font-size:20px}
+    .auth-field{padding:12px;border-radius:10px;border:1px solid #e6edf8;background:#fff;font-size:14px}
+    .auth-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:8px}
+
+    /* remove blur on auth open: we simply show auth-page (no backdrop-filter) */
+    /* small responsive */
+    @media (max-width:840px){
+      .auth-panel{flex-direction:column;align-items:stretch}
+      .auth-right{width:100%;max-width:100%}
+    }
+
+    /* subtle luxury tweaks for section cards */
+    .card{border-radius:12px;overflow:hidden;box-shadow:0 14px 40px rgba(6,10,25,0.07);border:1px solid rgba(10,12,20,0.04)}
+    .media{height:220px;background-size:cover;background-position:center}
+    .badge{font-size:12px;padding:6px 10px}
+    .price-ribbon{font-weight:900;letter-spacing:0.3px}
+
+    .muted{color:var(--muted)}
+    .center{text-align:center}
+    .gap-8{height:8px}
+
+    /* CSS: add preview styling */
+    .modal .image-preview{
+      width:100%;
+      max-height:220px;
+      object-fit:cover;
+      border-radius:10px;
+      border:1px solid #eef2f7;
+      display:block;
+      margin-top:12px;
+      background:#f7f9fc;
+    }
+    .modal .image-preview.hidden{display:none;}
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">CD</div>
+      <div>
+        <h1 style="margin:0">CarDekho • Clone</h1>
+        <div class="small muted">Presentation-ready Firebase demo</div>
+      </div>
+    </div>
+
+    <div class="nav-right">
+      <div id="user-area" style="display:flex;align-items:center;gap:12px">
+        <div id="user-badge" class="user-badge" style="display:none">
+          <div class="email" id="user-email"></div>
+          <div class="last" id="last-login"></div>
+        </div>
+        <button id="logout-btn" class="btn ghost" style="display:none" onclick="logout()">Logout</button>
+      </div>
+
+      <!-- Contact button placed visibly beside account (not behind it) -->
+      <button id="contact-btn" class="btn ghost" onclick="openContact()" style="margin-right:8px">Contact</button>
+
+      <!-- single Account button opens full-screen auth page -->
+      <button id="account-btn" class="btn" onclick="openAuthPage()">Account</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- HERO: search + quick add -->
+    <div class="hero">
+      <div class="search-card">
+        <h2 style="margin:0 0 12px 0">Discover Vehicles</h2>
+        <div class="search-row">
+          <input id="search-input" placeholder="Search by model, name or details">
+          <select id="filter-fuel">
+            <option value="">All Fuel Types</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Electric">Electric</option>
+            <option value="CNG">CNG</option>
+          </select>
+          <select id="sort-by">
+            <option value="new">Newest</option>
+            <option value="price-asc">Price: Low → High</option>
+            <option value="price-desc">Price: High → Low</option>
+          </select>
+          <button class="btn" onclick="applyFilters()">Apply</button>
+        </div>
+
+        <!-- Category tabs -->
+        <div class="category-tabs" id="category-tabs" style="margin-top:12px">
+          <button class="tab active" data-type="">All</button>
+          <button class="tab" data-type="Car">Cars</button>
+          <button class="tab" data-type="Bike">Bikes</button>
+          <button class="tab" data-type="Charter">Charter</button>
+          <button class="tab" data-type="Plane">Plane</button>
+        </div>
+
+        <div class="filters" style="margin-top:14px">
+          <div class="chip" onclick="clearFilters()">Clear Filters</div>
+          <div class="chip" onclick="openAddModal()">+ Add Vehicle</div>
+          <div class="chip" onclick="toggleAuth()">Profile</div>
+        </div>
+      </div>
+
+      <div class="search-card">
+        <h3 style="margin-top:0">Quick stats</h3>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:120px;background:#fff;padding:12px;border-radius:10px;box-shadow:var(--shadow);text-align:center">
+            <div class="small muted">Total items</div>
+            <div id="total-cars" style="font-weight:700;font-size:20px">0</div>
+          </div>
+          <div style="flex:1;min-width:120px;background:#fff;padding:12px;border-radius:10px;box-shadow:var(--shadow);text-align:center">
+            <div class="small muted">Bikes</div>
+            <div id="total-bikes" style="font-weight:700;font-size:20px">0</div>
+          </div>
+          <div style="flex:1;min-width:120px;background:#fff;padding:12px;border-radius:10px;box-shadow:var(--shadow);text-align:center">
+            <div class="small muted">Charter</div>
+            <div id="total-charters" style="font-weight:700;font-size:20px">0</div>
+          </div>
+          <div style="flex:1;min-width:120px;background:#fff;padding:12px;border-radius:10px;box-shadow:var(--shadow);text-align:center">
+            <div class="small muted">Plane</div>
+            <div id="total-planes" style="font-weight:700;font-size:20px">0</div>
+          </div>
+        </div>
+        <div class="gap-8"></div>
+        <div class="small muted">Tip: Sign up with email/password to add items.</div>
+      </div>
+    </div>
+
+    <!-- LAYOUT: cards + side panel -->
+    <div class="layout">
+      <div>
+        <div class="cards" id="cards"></div>
+      </div>
+
+      <aside class="side-panel">
+        <h4 style="margin:0">Filters & Actions</h4>
+        <div class="small muted" style="margin-top:6px">Use filters above or add a car (login required)</div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px dashed #eee">
+
+        <div style="margin-top:8px">
+          <div class="small muted">Quick sort</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn secondary" onclick="sortBy('price-asc')">Low→High</button>
+            <button class="btn secondary" onclick="sortBy('price-desc')">High→Low</button>
+          </div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px dashed #eee">
+        <div>
+          <div class="small muted">Make it presentation-ready</div>
+          <p style="margin:6px 0">Take screenshot of the page or use browser DevTools device toolbar for mobile preview.</p>
+        </div>
+
+        <!-- side-panel: add demo load and grand-prize promo -->
+        <div style="margin-top:12px">
+          <button class="btn" onclick="seedDemoData()">Load demo vehicles</button>
+        </div>
+
+        <div style="margin-top:12px" class="small muted">Last signup</div>
+        <div id="last-signup" class="last-signup" style="margin-bottom:10px">—</div>
+
+        <div style="margin-top:14px;padding:12px;background:linear-gradient(90deg,#ff9a9e,#fecfef);border-radius:8px;color:#fff;text-align:center">
+          <div style="font-weight:800">Win a Grand Prize: Charter Plane</div>
+          <div style="margin-top:6px;font-size:13px">Load demo vehicles for a better showcase. Click enter to register (demo only).</div>
+          <div style="margin-top:10px"><button class="btn" onclick="enterPrize()">Enter</button></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ===== New separate sections for Cars, Bikes, Charter, Win ===== -->
+  <div class="container">
+    <div id="cars-section" class="section-area">
+      <div class="section-hero">
+        <div>
+          <div class="title">Cars</div>
+          <div class="desc muted">Premium car listings — filter, sort and preview high-resolution images.</div>
+        </div>
+        <div><button class="btn ghost" onclick="scrollToSection('cars-section')">View Cars</button></div>
+      </div>
+      <div id="cards-cars" class="cards-grid"></div>
+    </div>
+
+    <div id="bikes-section" class="section-area">
+      <div class="section-hero">
+        <div>
+          <div class="title">Bikes</div>
+          <div class="desc muted">Sport, cruiser and classics — beautifully presented.</div>
+        </div>
+        <div><button class="btn ghost" onclick="scrollToSection('bikes-section')">View Bikes</button></div>
+      </div>
+      <div id="cards-bikes" class="cards-grid"></div>
+    </div>
+
+    <div id="charter-section" class="section-area">
+      <div class="section-hero">
+        <div>
+          <div class="title">Charter Planes</div>
+          <div class="desc muted">Private & luxury charters for executive travel.</div>
+        </div>
+        <div><button class="btn ghost" onclick="scrollToSection('charter-section')">View Charters</button></div>
+      </div>
+      <div id="cards-charter" class="cards-grid"></div>
+    </div>
+
+    <div id="win-section" class="section-area">
+      <div class="section-hero">
+        <div>
+          <div class="title">Win the Charter Plane</div>
+          <div class="desc muted">Presentation-only prize: preview the grand charter plane.</div>
+        </div>
+        <div><button class="btn" onclick="enterPrize()">Enter Now</button></div>
+      </div>
+      <div id="cards-win" class="cards-grid"></div>
+    </div>
+  </div>
+
+  <!-- ===== Full-screen Auth Page (no blur) ===== -->
+  <div id="auth-page" class="auth-page" aria-hidden="true">
+    <div class="auth-panel" role="dialog" aria-modal="true" aria-label="Account">
+      <div class="auth-left">
+        <div class="auth-hero">
+          <h2>Welcome to CarDekho • Premium</h2>
+          <p class="muted">Sign in or create an account to add listings, manage your inventory and access presentation features.</p>
+        </div>
+
+        <div style="display:flex;gap:12px">
+          <div style="flex:1">
+            <div class="small muted">Secure • Fast • Presentation-ready</div>
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=60" style="width:100%;border-radius:10px;margin-top:8px;object-fit:cover;height:140px">
+          </div>
+          <div style="flex:1">
+            <div class="small muted">Designer previews</div>
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=60" style="width:100%;border-radius:10px;margin-top:8px;object-fit:cover;height:140px;filter:grayscale(.08)">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+          <button class="btn ghost" onclick="closeAuthPage()">Close</button>
+        </div>
+      </div>
+
+      <div class="auth-right">
+        <div id="auth-forms" style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div class="small muted">Email</div>
+            <input id="auth-email" class="auth-field" placeholder="Email">
+          </div>
+          <div>
+            <div class="small muted">Password</div>
+            <input id="auth-pass" type="password" class="auth-field" placeholder="Password">
+          </div>
+
+          <div style="display:flex;gap:8px">
+            <button class="btn login" onclick="loginFromAuth()">Sign In</button>
+            <button class="btn signup" onclick="signupFromAuth()">Create Account</button>
+          </div>
+
+          <div class="small muted" style="text-align:center;padding-top:8px">Or use the small auth panels below for advanced options</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add / Edit Vehicle -->
+  <div id="modal-backdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 id="modal-title">Add New Vehicle</h3>
+        <button onclick="closeModal()" class="btn secondary">Close</button>
+      </div>
+
+      <div style="margin-top:12px">
+        <div class="form-grid">
+          <input id="car-name" placeholder="Name (e.g., Maruti Swift)">
+          <input id="car-model" placeholder="Model (e.g., 2023)">
+          <input id="car-price" placeholder="Price (e.g., 7,50,000)">
+          <select id="car-fuel">
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Electric">Electric</option>
+            <option value="CNG">CNG</option>
+          </select>
+          <input id="car-kms" placeholder="Kms driven (optional)">
+          <input id="car-image" placeholder="Image URL (paste a full image URL)">
+          <!-- image preview -->
+          <img id="car-image-preview" class="image-preview hidden" alt="Vehicle image preview">
+          <!-- New: vehicle type -->
+          <select id="car-type" style="grid-column:1/3">
+            <option value="Car">Car</option>
+            <option value="Bike">Bike</option>
+            <option value="Charter">Charter</option>
+            <option value="Plane">Plane</option>
+          </select>
+        </div>
+
+        <div class="row" style="margin-top:12px;justify-content:space-between;align-items:center">
+          <div class="small muted">You can add sample images for nicer preview.</div>
+          <button class="btn" onclick="submitCar()">Save Item</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ...existing modals (modal-backdrop) remain ... -->
+
+  <!-- Firebase SDK (namespaced v8 style for simplicity) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+	/***** Your Firebase config (replaced with your provided snippet) *****/
+	const firebaseConfig = {
+		apiKey: "AIzaSyDfZMceYwe9hoCk6cKO4Pi8zLsgxjXb7uc",
+		authDomain: "mynetflix-1902e.firebaseapp.com",
+		projectId: "mynetflix-1902e",
+		storageBucket: "mynetflix-1902e.appspot.com",
+		messagingSenderId: "213754965273",
+		appId: "1:213754965273:web:15abebbfbc3fd95716a988"
+		// measurementId removed to avoid CONFIGURATION_NOT_FOUND issues
+	};
+
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+	// make auth and db mutable so re-init can replace them
+	let auth = firebase.auth();
+	let db = firebase.firestore();
+
+	/***** UI hooks *****/
+    const cardsEl = document.getElementById('cards');
+    const totalCarsEl = document.getElementById('total-cars');
+    const userEmailEl = document.getElementById('user-email');
+    const logoutBtn = document.getElementById('logout-btn');
+    const openAuthBtn = document.getElementById('open-auth');
+    const categoryTabsEl = document.getElementById('category-tabs');
+    const userBadgeEl = document.getElementById('user-badge');
+    const lastLoginEl = document.getElementById('last-login');
+    const lastSignupEl = document.getElementById('last-signup');
+
+    // modal elements
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const authBackdrop = document.getElementById('auth-backdrop');
+    const modalTitle = document.getElementById('modal-title');
+
+    // state for filters
+    let currentFilter = { q:'', fuel:'', sort:'new', type: '' };
+
+    // add editing state
+    let editingId = null;
+
+    /***** Auth UI *****/
+    // replace openAuth to accept mode and focus panels
+    function openAuth(mode='login'){
+      // show modal
+      authBackdrop.style.display = 'flex';
+      // simple focus: show which panel to focus by scrolling into view or focusing input
+      if(mode === 'signup'){
+        document.getElementById('signup-email').focus();
+        // optional highlight
+        document.getElementById('auth-title').textContent = 'Create an account';
+      } else {
+        document.getElementById('login-email').focus();
+        document.getElementById('auth-title').textContent = 'Welcome back';
+      }
+    }
+    function closeAuth(){
+      authBackdrop.style.display = 'none';
+      document.getElementById('auth-title').textContent = 'Login / Signup';
+    }
+
+    auth.onAuthStateChanged(user=>{
+      if(user){
+        // show email + last sign-in
+        userEmailEl.textContent = user.email || '';
+        userBadgeEl.style.display = 'flex';
+        logoutBtn.style.display = 'inline-block';
+        document.getElementById('open-login').style.display = 'none';
+        document.getElementById('open-signup').style.display = 'none';
+        // last sign-in time (metadata)
+        let last = user.metadata && user.metadata.lastSignInTime ? new Date(user.metadata.lastSignInTime).toLocaleString() : '';
+        lastLoginEl.textContent = last ? 'Last login: ' + last : '';
+      }else{
+        userBadgeEl.style.display = 'none';
+        userEmailEl.textContent = '';
+        logoutBtn.style.display = 'none';
+        document.getElementById('open-login').style.display = 'inline-block';
+        document.getElementById('open-signup').style.display = 'inline-block';
+        lastLoginEl.textContent = '';
+      }
+    });
+
+    async function signup(){
+      const email = document.getElementById('signup-email').value.trim();
+      const pass = document.getElementById('signup-password').value;
+      if(!email || !pass){ alert('Enter email and password'); return; }
+      try{
+        const cred = await auth.createUserWithEmailAndPassword(email, pass);
+        // write a simple user record for 'last signup' display
+        if(cred && cred.user){
+          await db.collection('users').add({
+            uid: cred.user.uid,
+            email: cred.user.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+        alert('Account created — you are logged in now');
+        closeAuth();
+      }catch(e){
+			console.error('signup error', e);
+			// if configuration error, attempt reinit and instruct user to retry
+			const msg = (e && (e.message || e.toString()) || '').toString();
+			const code = e && e.code ? e.code : '';
+			if (msg.includes('CONFIGURATION_NOT_FOUND') || code === 'CONFIGURATION_NOT_FOUND') {
+				const ok = await reinitFirebaseWithoutAnalytics();
+				if (ok) {
+					alert('Configuration was missing for analytics — Firebase was re-initialized without analytics. Please try signing up again.');
+				} else {
+					alert('CONFIGURATION_NOT_FOUND — check Firebase project configuration in your code.');
+				}
+				return;
+			}
+			alert(e.message || 'Signup error');
+		}
+    }
+
+    // show recent signup - keep a live listener for most recent user
+    db.collection('users').orderBy('createdAt','desc').limit(1).onSnapshot(snap=>{
+      if(snap.empty){ lastSignupEl.textContent = '—'; return; }
+      snap.forEach(d=>{
+        const data = d.data();
+        const ts = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : '';
+        lastSignupEl.textContent = `${data.email || 'unknown'} • ${ts}`;
+      });
+    });
+
+    // provide missing closeModal used earlier (close add/edit modal)
+    function closeModal(){
+      modalBackdrop.style.display = 'none';
+      editingId = null;
+      updateImagePreview('');
+    }
+
+    // ensure openAddModal hides auth if not needed; keep rest unchanged
+    function openAddModal(){
+      if(!auth.currentUser){
+        alert('Please login/signup first to add items.');
+        openAuth('signup');
+        return;
+      }
+      editingId = null;
+      modalTitle.textContent = 'Add New Vehicle';
+      document.getElementById('car-name').value = '';
+      document.getElementById('car-model').value = '';
+      document.getElementById('car-price').value = '';
+      document.getElementById('car-image').value = '';
+      document.getElementById('car-fuel').value = 'Petrol';
+      document.getElementById('car-kms').value = '';
+      document.getElementById('car-type').value = 'Car';
+      updateImagePreview('');
+      modalBackdrop.style.display = 'flex';
+    }
+
+    // update image preview as user types/pastes URL
+    const carImageInput = document.getElementById('car-image');
+    const carImagePreview = document.getElementById('car-image-preview');
+    if(carImageInput){
+      carImageInput.addEventListener('input', (e)=>{
+        const url = (e.target.value || '').trim();
+        updateImagePreview(url);
+      });
+    }
+
+    function updateImagePreview(url){
+      if(!carImagePreview) return;
+      if(!url){
+        carImagePreview.classList.add('hidden');
+        carImagePreview.src = '';
+        carImagePreview.alt = 'Vehicle image preview';
+        return;
+      }
+      // set preview; use onerror to hide broken images
+      carImagePreview.classList.remove('hidden');
+      carImagePreview.src = url;
+      carImagePreview.alt = 'Preview: ' + url;
+      carImagePreview.onerror = () => { carImagePreview.classList.add('hidden'); };
+    }
+
+    /* Modify viewDetails to set editingId (enter edit mode) */
+    function viewDetails(id){
+      db.collection('cars').doc(id).get().then(doc=>{
+        if(!doc.exists) return alert('Not found');
+        const c = doc.data();
+        editingId = id;
+        modalTitle.textContent = 'Edit Vehicle';
+        document.getElementById('car-name').value = c.name || '';
+        document.getElementById('car-model').value = c.model || '';
+        document.getElementById('car-price').value = c.price || '';
+        document.getElementById('car-image').value = c.image || '';
+        document.getElementById('car-fuel').value = c.fuel || 'Petrol';
+        document.getElementById('car-kms').value = c.kms || '';
+        document.getElementById('car-type').value = c.type || 'Car';
+        updateImagePreview(c.image || '');
+        modalBackdrop.style.display = 'flex';
+      }).catch(e=>alert(e.message));
+    }
+
+    /* Modify submitCar to update when editingId present */
+    async function submitCar(){
+      const name = document.getElementById('car-name').value.trim();
+      const model = document.getElementById('car-model').value.trim();
+      const price = document.getElementById('car-price').value.trim();
+      const image = document.getElementById('car-image').value.trim();
+      const fuel = document.getElementById('car-fuel').value;
+      const kms = document.getElementById('car-kms').value.trim();
+      const type = document.getElementById('car-type').value || 'Car';
+
+      if(!name || !model || !price || !image){
+        alert('Please fill: name, model, price & image');
+        return;
+      }
+
+      try{
+        if(editingId){
+          // update existing doc
+          await db.collection('cars').doc(editingId).update({
+            name, model, price, image, fuel, kms: kms||'N/A', type
+          });
+          alert('Item updated ✅');
+        } else {
+          await db.collection('cars').add({
+            name, model, price, image, fuel, kms: kms||'N/A', type,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            owner: auth.currentUser ? auth.currentUser.uid : null
+          });
+          alert('Item added ✅');
+        }
+        // reset editing state and close
+        editingId = null;
+        closeModal();
+      }catch(e){
+        alert('Error saving item: ' + e.message);
+      }
+    }
+
+    /***** Fetch & Render items (real-time) *****/
+    let unsubscribe = null;
+    let lastSnapshotDocs = []; // cache
+    function startListening(){
+      if(unsubscribe) unsubscribe();
+
+      // base query
+      let q = db.collection('cars');
+      // apply sorting by createdAt desc default
+      q = q.orderBy('createdAt','desc');
+
+      unsubscribe = q.onSnapshot(snapshot=>{
+        const docs = [];
+        snapshot.forEach(doc=>{
+          docs.push({ id: doc.id, ...doc.data() });
+        });
+        lastSnapshotDocs = docs;
+        // apply client-side filters / sorting
+        const filtered = applyClientFilters(docs);
+        renderCards(filtered);
+        totalCarsEl.textContent = docs.length;
+        updateTypeCounts(docs);
+        // new: render by type into specific containers
+        renderByType(docs, 'Car', 'cards-cars');
+        renderByType(docs, 'Bike', 'cards-bikes');
+        renderByType(docs, 'Plane', 'cards-charter'); // using 'charter' or 'Plane' depending on stored type - we used 'Plane'
+        // place Win section: show Plane entries with special highlight (or last demo plane)
+        renderByType(docs, 'Plane', 'cards-win');
+      }, err=>{
+        console.error('Snapshot err', err);
+      });
+    }
+
+    function updateTypeCounts(docs){
+      const counts = { Car:0, Bike:0, Charter:0, Plane:0 };
+      docs.forEach(d=>{
+        const t = d.type || 'Car';
+        counts[t] = (counts[t] || 0) + 1;
+      });
+      document.getElementById('total-cars').textContent = docs.length || 0;
+      document.getElementById('total-bikes').textContent = counts.Bike || 0;
+      document.getElementById('total-charters').textContent = counts.Charter || 0;
+      document.getElementById('total-planes').textContent = counts.Plane || 0;
+    }
+
+    function applyClientFilters(list){
+      let arr = list.slice();
+      // search q
+      const qtxt = (currentFilter.q||'').toLowerCase();
+      if(qtxt){
+        arr = arr.filter(c => (c.name||'').toLowerCase().includes(qtxt) || (c.model||'').toLowerCase().includes(qtxt));
+      }
+      if(currentFilter.fuel){
+        arr = arr.filter(c => (c.fuel||'') === currentFilter.fuel);
+      }
+      if(currentFilter.type){
+        arr = arr.filter(c => (c.type||'') === currentFilter.type);
+      }
+      // sort
+      if(currentFilter.sort === 'price-asc'){
+        arr.sort((a,b)=>parseNumber(a.price) - parseNumber(b.price));
+      } else if(currentFilter.sort === 'price-desc'){
+        arr.sort((a,b)=>parseNumber(b.price) - parseNumber(a.price));
+      } else { // new
+        arr.sort((a,b)=> {
+          const ta = a.createdAt ? a.createdAt.seconds||0 : 0;
+          const tb = b.createdAt ? b.createdAt.seconds||0 : 0;
+          return tb - ta;
+        });
+      }
+      return arr;
+    }
+
+    function renderCards(list){
+      cardsEl.innerHTML = '';
+      if(list.length === 0){
+        // If there are no items in Firestore, show friendly demo tiles to illustrate categories
+        const demoHtml = `
+          <div style="grid-column:1/-1;padding:20px;background:#fff;border-radius:12px;text-align:center;box-shadow:var(--shadow)">
+            <h3 style="margin-top:0">No items yet — Add one using <strong>Add Vehicle</strong></h3>
+            <div style="margin-top:12px;color:var(--muted)">Tip: Use sample image URLs (unsplash/placeholder) for a presentation-ready look.</div>
+          </div>
+        `;
+        cardsEl.innerHTML = demoHtml;
+        return;
+      }
+      list.forEach(car=>{
+        // choose badge class by type
+        const t = (car.type||'Car');
+        let badgeClass = 'car';
+        if(t === 'Bike') badgeClass = 'bike';
+        if(t === 'Charter') badgeClass = 'charter';
+        if(t === 'Plane') badgeClass = 'plane';
+
+        // actions: only owner can delete
+        let actions = `<button class="btn secondary" onclick="viewDetails('${car.id}')">View</button>`;
+        if(auth.currentUser && car.owner === auth.currentUser.uid){
+          actions += ` <button class="btn" onclick="deleteCar('${car.id}')">Delete</button>`;
+        }
+
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <div class="img" style="background-image:url('${escapeHtml(car.image || '')}')" ></div>
+          <div class="info">
+            <div style="display:flex;justify-content:space-between;align-items:start;gap:12px">
+              <h3 style="flex:1">${escapeHtml(car.name || 'Unknown')}</h3>
+              <div><span class="badge ${badgeClass}">${escapeHtml(t)}</span></div>
+            </div>
+            <div class="meta">
+              <div class="small muted">${escapeHtml(car.model || '')} • ${escapeHtml(car.fuel||'')}</div>
+              <div class="price">₹ ${escapeHtml(car.price || '')}</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+              <div class="small muted">Kms: ${escapeHtml(car.kms || 'N/A')}</div>
+              <div>${actions}</div>
+            </div>
+          </div>
+        `;
+        cardsEl.appendChild(div);
+      });
+    }
+
+    function escapeHtml(text){
+      if(!text && text !== 0) return '';
+      return (''+text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,"&#39;").replace(/"/g,'&quot;');
+    }
+
+    /***** Actions: view & delete *****/
+    function viewDetails(id){
+      db.collection('cars').doc(id).get().then(doc=>{
+        if(!doc.exists) return alert('Not found');
+        const c = doc.data();
+        editingId = id;
+        modalTitle.textContent = 'Edit Vehicle';
+        document.getElementById('car-name').value = c.name || '';
+        document.getElementById('car-model').value = c.model || '';
+        document.getElementById('car-price').value = c.price || '';
+        document.getElementById('car-image').value = c.image || '';
+        document.getElementById('car-fuel').value = c.fuel || 'Petrol';
+        document.getElementById('car-kms').value = c.kms || '';
+        document.getElementById('car-type').value = c.type || 'Car';
+        updateImagePreview(c.image || '');
+        modalBackdrop.style.display = 'flex';
+      }).catch(e=>alert(e.message));
+    }
+
+    async function deleteCar(id){
+      if(!confirm('Delete this item?')) return;
+      try{
+        await db.collection('cars').doc(id).delete();
+        alert('Deleted');
+      }catch(e){ alert(e.message); }
+    }
+
+    /***** Filters UI binding *****/
+    document.getElementById('search-input').addEventListener('input', e=>{
+      currentFilter.q = e.target.value;
+      applyFilters();
+    });
+    document.getElementById('filter-fuel').addEventListener('change', e=>{
+      currentFilter.fuel = e.target.value;
+      applyFilters();
+    });
+    document.getElementById('sort-by').addEventListener('change', e=>{
+      currentFilter.sort = e.target.value;
+      applyFilters();
+    });
+
+    // category tab clicks
+    categoryTabsEl.addEventListener('click', (ev)=>{
+      const btn = ev.target.closest('button');
+      if(!btn) return;
+      Array.from(categoryTabsEl.querySelectorAll('.tab')).forEach(t=>t.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter.type = btn.getAttribute('data-type') || '';
+      applyFilters();
+    });
+
+    function applyFilters(){
+      // re-render from last cached snapshot without re-subscribing
+      const filtered = applyClientFilters(lastSnapshotDocs);
+      renderCards(filtered);
+    }
+    function clearFilters(){
+      currentFilter = { q:'', fuel:'', sort:'new', type: '' };
+      document.getElementById('search-input').value = '';
+      document.getElementById('filter-fuel').value = '';
+      document.getElementById('sort-by').value = 'new';
+      Array.from(categoryTabsEl.querySelectorAll('.tab')).forEach(t=>t.classList.remove('active'));
+      categoryTabsEl.querySelector('.tab').classList.add('active');
+      startListening();
+    }
+    function sortBy(mode){
+      currentFilter.sort = mode;
+      document.getElementById('sort-by').value = mode === 'new' ? 'new' : mode;
+      startListening();
+    }
+
+    /***** New helper: scroll to section on button click (smooth) *****/
+    function scrollToSection(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    /***** Render items into per-type sections (Cars/Bikes/Charter/Win) ===== */
+    function renderByType(list, type, containerId){
+      const cont = document.getElementById(containerId);
+      if(!cont) return;
+      cont.innerHTML = '';
+      const filtered = list.filter(i => (i.type||'Car') === type);
+      if(filtered.length === 0){
+        cont.innerHTML = `<div style="padding:18px;background:#fff;border-radius:10px;text-align:center;color:${getComputedStyle(document.documentElement).getPropertyValue('--muted')};">No items</div>`;
+        return;
+      }
+      filtered.forEach(car=>{
+        // create card (compact markup to avoid repeating entire component)
+        const d = document.createElement('div'); d.className='card';
+        d.innerHTML = `
+          <div class="media" style="background-image:url('${escapeHtml(car.image||'')}')"></div>
+          <div style="padding:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-weight:800">${escapeHtml(car.name||'')}</div>
+              <div><span class="badge ${car.type==='Bike'?'bike':car.type==='Plane'?'plane':'car'}">${escapeHtml(car.type||'Car')}</span></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+              <div class="muted">${escapeHtml(car.model||'')} • ${escapeHtml(car.fuel||'')}</div>
+              <div class="price-ribbon">₹ ${escapeHtml(car.price||'Contact')}</div>
+            </div>
+          </div>
+        `;
+        cont.appendChild(d);
+      });
+    }
+
+    // update startListening to also populate per-type sections
+    const originalStartListening = startListening;
+    startListening = function(){
+      if(unsubscribe) unsubscribe();
+      let q = db.collection('cars').orderBy('createdAt','desc');
+      unsubscribe = q.onSnapshot(snapshot=>{
+        const docs = [];
+        snapshot.forEach(doc=>docs.push({ id:doc.id, ...doc.data() }));
+        lastSnapshotDocs = docs;
+        // existing main render
+        const filtered = applyClientFilters(docs);
+        renderCards(filtered);
+        totalCarsEl.textContent = docs.length;
+        updateTypeCounts(docs);
+        // new: render by type into specific containers
+        renderByType(docs, 'Car', 'cards-cars');
+        renderByType(docs, 'Bike', 'cards-bikes');
+        renderByType(docs, 'Plane', 'cards-charter'); // using 'charter' or 'Plane' depending on stored type - we used 'Plane'
+        // place Win section: show Plane entries with special highlight (or last demo plane)
+        renderByType(docs, 'Plane', 'cards-win');
+      }, err=>console.error('Snapshot err',err));
+    };
+    // start listening immediately via replaced startListening
+    startListening();
+
+    /***** Auth full-screen page controls (no blur) ===== */
+    function openAuthPage(){
+      document.getElementById('auth-page').style.display = 'flex';
+      document.getElementById('auth-page').setAttribute('aria-hidden','false');
+      document.getElementById('auth-email').focus();
+    }
+    function closeAuthPage(){
+      document.getElementById('auth-page').style.display = 'none';
+      document.getElementById('auth-page').setAttribute('aria-hidden','true');
+    }
+
+    // wire old openAuth calls to openAuthPage for compatibility
+    function openAuth(mode='login'){ openAuthPage(); if(mode==='signup') document.getElementById('auth-email').focus(); }
+    function closeAuth(){ closeAuthPage(); }
+
+    // login/signup flows from auth-page (calls existing firebase code)
+    async function loginFromAuth(){
+      const email = document.getElementById('auth-email').value.trim();
+      const pass = document.getElementById('auth-pass').value;
+      if(!email||!pass){ alert('Enter email & password'); return; }
+      try {
+        await retryOnceAfterReinit(()=> auth.signInWithEmailAndPassword(email,pass));
+        alert('Logged in');
+        closeAuthPage();
+      } catch(e) {
+        console.error('login error', e);
+        alert(e.message || 'Login error');
+      }
+    }
+    async function signupFromAuth(){
+      const email = document.getElementById('auth-email').value.trim();
+      const pass = document.getElementById('auth-pass').value;
+      if(!email||!pass){ alert('Enter email & password'); return; }
+      try{
+        const cred = await retryOnceAfterReinit(()=> auth.createUserWithEmailAndPassword(email,pass));
+        if(cred && cred.user){
+          // use reassigned db
+          await db.collection('users').add({ uid:cred.user.uid, email:cred.user.email, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        }
+        alert('Account created');
+        closeAuthPage();
+      }catch(e){
+        console.error('signupFromAuth error', e);
+        alert(e.message || 'Signup error');
+      }
+    }
+
+    /* ============ UPDATED reinit + retry logic ============ */
+	// keep a copy of original config so re-init can use it
+	const __ORIGINAL_FIREBASE_CONFIG = Object.assign({}, firebaseConfig);
+	let reinitInProgress = false;
+
+	async function reinitFirebaseWithoutAnalytics() {
+		if (reinitInProgress) return false;
+		reinitInProgress = true;
+		try {
+			const cfg = Object.assign({}, __ORIGINAL_FIREBASE_CONFIG);
+			delete cfg.measurementId;
+			// delete existing app before re-init (v8)
+			if (firebase.apps && firebase.apps.length) {
+				await firebase.app().delete();
+			}
+			// re-initialize without measurementId
+			firebase.initializeApp(cfg);
+			// re-wire auth and firestore references (reassign outer-scope lets)
+			auth = firebase.auth();
+			db = firebase.firestore();
+			// restart real-time listeners if needed
+			try { startListening(); } catch (_) { /* ignore if not defined yet */ }
+			console.warn('Firebase re-initialized without analytics/measurementId.');
+			reinitInProgress = false;
+			return true;
+		} catch (err) {
+			console.error('Re-init failed', err);
+			reinitInProgress = false;
+			return false;
+		}
+	}
+
+    /* Helper: retry an async action once after reinit on CONFIGURATION_NOT_FOUND */
+    async function retryOnceAfterReinit(actionFn) {
+      try {
+        return await actionFn();
+      } catch (e) {
+        const msg = (e && (e.message || e.toString()) || '').toString();
+        const code = e && e.code ? e.code : '';
+        if (msg.includes('CONFIGURATION_NOT_FOUND') || code === 'CONFIGURATION_NOT_FOUND') {
+          const ok = await reinitFirebaseWithoutAnalytics();
+          if (ok) {
+            // try again once
+            return await actionFn();
+          }
+        }
+        throw e;
+      }
+    }
+
+	// global handler for uncaught promise rejections (captures CONFIGURATION_NOT_FOUND)
+	window.addEventListener('unhandledrejection', function (evt) {
+		try {
+			const reason = evt.reason || {};
+			const msg = (reason.message || '').toString();
+			const code = reason.code || '';
+			if (msg.includes('CONFIGURATION_NOT_FOUND') || code === 'CONFIGURATION_NOT_FOUND') {
+				console.warn('Detected CONFIGURATION_NOT_FOUND:', reason);
+				// attempt a reinit (non-blocking)
+				reinitFirebaseWithoutAnalytics();
+			}
+		} catch (e) {
+			// swallow
+		}
+	});
+
+  </script>
+</body>
+</html>
