@@ -1,247 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pro Registration Website</title>
-
-  <!-- Google Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-    body { background: linear-gradient(135deg,#667eea,#764ba2); color: #333; }
-
-    /* Navbar */
-    nav {
-      width: 100%;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 50px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    nav .logo { font-size: 24px; font-weight: 700; color: white; }
-    nav ul { list-style: none; display: flex; gap: 25px; }
-    nav ul li a {
-      text-decoration: none; color: white;
-      font-weight: 500; transition: 0.3s;
-    }
-    nav ul li a:hover { color: #ffd700; }
-
-    /* Hero Section */
-    .hero {
-      display: flex; justify-content: center; align-items: center;
-      padding: 50px 20px; min-height: 100vh;
-    }
-
-    /* Form Container */
-    .form-container {
-      background: rgba(255,255,255,0.95);
-      border-radius: 20px;
-      padding: 50px;
-      width: 100%;
-      max-width: 700px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-      backdrop-filter: blur(15px);
-      animation: fadeIn 1s ease forwards;
-    }
-
-    .form-container h2 {
-      text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 30px;
-      color: #333;
-    }
-
-    .form-group {
-      position: relative; margin-bottom: 25px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%; padding: 18px 18px 18px 18px; border-radius: 12px; border: 1px solid #ccc;
-      font-size: 16px; outline: none; transition: 0.3s; background: rgba(255,255,255,0.9);
-    }
-
-    .form-group label {
-      position: absolute; top: 18px; left: 18px; color: #aaa;
-      font-size: 16px; pointer-events: none; transition: 0.3s;
-    }
-
-    .form-group input:focus + label,
-    .form-group input:not(:placeholder-shown) + label,
-    .form-group select:focus + label,
-    .form-group select:not([value=""]) + label,
-    .form-group textarea:focus + label,
-    .form-group textarea:not(:placeholder-shown) + label {
-      top: -10px; left: 12px; font-size: 13px; color: #667eea; background: white; padding: 0 5px;
-    }
-
-    .form-group i { position: absolute; top: 18px; right: 18px; color: #aaa; }
-
-    .submit-btn {
-      width: 100%; padding: 18px; border: none; border-radius: 12px; background: #667eea; color: white;
-      font-size: 18px; font-weight: 500; cursor: pointer; transition: 0.3s;
-    }
-    .submit-btn:hover { background: #764ba2; }
-
-    .success-msg, .error-msg {
-      text-align: center; margin-top: 20px; padding: 12px; border-radius: 10px; display: none;
-      font-weight: 500;
-    }
-    .success-msg { background: #d4edda; color: #155724; }
-    .error-msg { background: #f8d7da; color: #721c24; }
-
-    @keyframes fadeIn { 0%{opacity:0;transform:translateY(20px);}100%{opacity:1;transform:translateY(0);} }
-
-    @media(max-width:768px){ nav{padding:15px 20px;} .form-container{padding:30px 20px;} }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All-in-One Firebase App</title>
+<style>
+body { background-color: black; color: silver; font-family: Arial; padding: 20px; }
+input, button, textarea { padding: 8px; margin: 5px; border-radius: 5px; }
+button { background-color: silver; color: black; border: none; cursor: pointer; }
+.section { border: 1px solid silver; padding: 15px; margin: 10px 0; }
+.hidden { display: none; }
+.blog-card { border:1px solid silver; padding:10px; margin:5px 0; }
+a { color: silver; text-decoration:none; }
+a:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">ProRegister</div>
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Features</a></li>
-      <li><a href="#">Pricing</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
-  </nav>
+<h1>All-in-One Firebase App</h1>
 
-  <!-- Hero & Form -->
-  <section class="hero">
-    <div class="form-container">
-      <h2>Register for Your Account</h2>
-      <form id="myForm">
+<!-- AUTH SECTION -->
+<div class="section" id="auth-section">
+  <h2>Login / Signup</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <br>
+  <button onclick="signup()">Signup</button>
+  <button onclick="login()">Login</button>
+  <button onclick="resetPassword()">Forgot Password</button>
+</div>
 
-        <!-- Name -->
-        <div class="form-group">
-          <input type="text" id="name" placeholder=" " required>
-          <label for="name">Full Name</label>
-          <i class="fa fa-user"></i>
-        </div>
+<!-- BLOG SECTION -->
+<div class="section hidden" id="blog-section">
+  <h2>Blog Module</h2>
+  <input type="text" id="title" placeholder="Blog Title">
+  <textarea id="content" placeholder="Blog Content"></textarea>
+  <button onclick="createBlog()">Create Blog</button>
+  <div id="blogList"></div>
+</div>
 
-        <!-- Email -->
-        <div class="form-group">
-          <input type="email" id="email" placeholder=" " required>
-          <label for="email">Email</label>
-          <i class="fa fa-envelope"></i>
-        </div>
+<!-- PDF SUMMARIZER -->
+<div class="section hidden" id="pdf-section">
+  <h2>PDF Summarizer</h2>
+  <input type="file" id="pdfFile">
+  <button onclick="summarizePDF()">Summarize PDF</button>
+  <div id="summary"></div>
+</div>
 
-        <!-- Phone -->
-        <div class="form-group">
-          <input type="text" id="phone" placeholder=" " required>
-          <label for="phone">Phone</label>
-          <i class="fa fa-phone"></i>
-        </div>
+<!-- GOOGLE SCRAPER -->
+<div class="section hidden" id="scraper-section">
+  <h2>Google Scraper</h2>
+  <input type="text" id="keyword" placeholder="Enter keyword">
+  <button onclick="searchKeyword()">Search</button>
+  <div id="results"></div>
+</div>
 
-        <!-- Username -->
-        <div class="form-group">
-          <input type="text" id="username" placeholder=" " required>
-          <label for="username">Username</label>
-          <i class="fa fa-user-circle"></i>
-        </div>
+<!-- LOGOUT BUTTON -->
+<button onclick="logout()" id="logoutBtn" class="hidden">Logout</button>
 
-        <!-- Password -->
-        <div class="form-group">
-          <input type="password" id="password" placeholder=" " required>
-          <label for="password">Password</label>
-          <i class="fa fa-lock"></i>
-        </div>
+<!-- Firebase SDKs (order matters) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
 
-        <!-- Gender -->
-        <div class="form-group">
-          <select id="gender" required>
-            <option value="" disabled selected hidden></option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-          <label for="gender">Gender</label>
-          <i class="fa fa-venus-mars"></i>
-        </div>
+<script>
+// ✅ Firebase Config (from your project settings)
+const firebaseConfig = {
+  apiKey: "AIzaSyDfZMceYwe9hoCk6cKO4Pi8zLsgxjXb7uc",
+  authDomain: "mynetflix-1902e.firebaseapp.com",
+  projectId: "mynetflix-1902e",
+  storageBucket: "mynetflix-1902e.appspot.com",
+  messagingSenderId: "213754965273",
+  appId: "1:213754965273:web:15abebbfbc3fd95716a988",
+  measurementId: "G-FHR2WTDNVZ"
+};
 
-        <!-- DOB -->
-        <div class="form-group">
-          <input type="date" id="dob" placeholder=" " required>
-          <label for="dob">Date of Birth</label>
-          <i class="fa fa-calendar"></i>
-        </div>
+// ✅ Initialize Firebase safely
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
-        <!-- Address -->
-        <div class="form-group">
-          <textarea id="address" rows="4" placeholder=" " required></textarea>
-          <label for="address">Address</label>
-          <i class="fa fa-home"></i>
-        </div>
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-        <button type="submit" class="submit-btn">Submit</button>
-      </form>
-
-      <div class="success-msg" id="successMsg">Data saved successfully!</div>
-      <div class="error-msg" id="errorMsg">Error saving data.</div>
-    </div>
-  </section>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDfZMceYwe9hoCk6cKO4Pi8zLsgxjXb7uc",
-      authDomain: "mynetflix-1902e.firebaseapp.com",
-      projectId: "mynetflix-1902e",
-      storageBucket: "mynetflix-1902e.appspot.com",
-      messagingSenderId: "213754965273",
-      appId: "1:213754965273:web:15abebbfbc3fd95716a988",
-      measurementId: "G-FHR2WTDNVZ"
-    };
-
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    const myForm = document.getElementById('myForm');
-    const successMsg = document.getElementById('successMsg');
-    const errorMsg = document.getElementById('errorMsg');
-
-    myForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const data = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        username: document.getElementById('username').value,
-        password: document.getElementById('password').value,
-        gender: document.getElementById('gender').value,
-        dob: document.getElementById('dob').value,
-        address: document.getElementById('address').value,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      };
-
-      db.collection('users').add(data)
-        .then(() => {
-          successMsg.style.display = 'block';
-          errorMsg.style.display = 'none';
-          myForm.reset();
-        })
-        .catch((error) => {
-          console.error("Error adding document: ", error);
-          errorMsg.style.display = 'block';
-          successMsg.style.display = 'none';
-        });
+// ✅ AUTH FUNCTIONS
+function signup() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      alert("Signup successful! Welcome " + userCredential.user.email);
+    })
+    .catch(error => {
+      alert("Signup Error: " + error.message);
     });
-  </script>
+}
+
+function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  auth.signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      alert("Login successful! Welcome " + userCredential.user.email);
+      showSections();
+    })
+    .catch(error => {
+      if (error.code === "auth/invalid-login-credentials" ||
+          error.code === "auth/wrong-password" ||
+          error.code === "auth/user-not-found") {
+        alert("Invalid email or password. Please check or signup first.");
+      } else {
+        alert("Login Error: " + error.message);
+      }
+    });
+}
+
+// ✅ Forgot Password Feature
+function resetPassword() {
+  const email = document.getElementById("email").value.trim();
+  if (!email) return alert("Please enter your email first.");
+  auth.sendPasswordResetEmail(email)
+    .then(() => {
+      alert("Password reset email sent! Check your inbox.");
+    })
+    .catch(error => {
+      alert("Reset Error: " + error.message);
+    });
+}
+
+// ✅ Logout
+function logout() {
+  auth.signOut().then(() => location.reload());
+}
+
+// ✅ Monitor Auth State
+auth.onAuthStateChanged(user => {
+  if (user) showSections();
+});
+
+// ✅ SHOW SECTIONS AFTER LOGIN
+function showSections() {
+  document.getElementById("auth-section").classList.add("hidden");
+  document.getElementById("blog-section").classList.remove("hidden");
+  document.getElementById("pdf-section").classList.remove("hidden");
+  document.getElementById("scraper-section").classList.remove("hidden");
+  document.getElementById("logoutBtn").classList.remove("hidden");
+  loadBlogs();
+}
+
+// ✅ BLOG MODULE
+function loadBlogs() {
+  db.collection("blogs").orderBy("date", "desc").onSnapshot(snap => {
+    const blogList = document.getElementById("blogList");
+    blogList.innerHTML = "";
+    snap.forEach(doc => {
+      const data = doc.data();
+      blogList.innerHTML += `
+        <div class="blog-card">
+          <h3>${data.title}</h3>
+          <p>${data.content}</p>
+          <small>${new Date(data.date.seconds * 1000).toLocaleString()}</small><br>
+          <button onclick="editBlog('${doc.id}')">Edit</button>
+          <button onclick="deleteBlog('${doc.id}')">Delete</button>
+        </div>`;
+    });
+  });
+}
+
+function createBlog() {
+  const title = document.getElementById("title").value.trim();
+  const content = document.getElementById("content").value.trim();
+  if (!title || !content) return alert("Title & Content required!");
+  db.collection("blogs").add({
+    title,
+    content,
+    date: firebase.firestore.Timestamp.now(),
+    author: auth.currentUser.email
+  }).then(() => {
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+  });
+}
+
+function editBlog(id) {
+  const t = prompt("New title");
+  const c = prompt("New content");
+  if (t && c) db.collection("blogs").doc(id).update({ title: t, content: c });
+}
+
+function deleteBlog(id) {
+  if (confirm("Are you sure?")) db.collection("blogs").doc(id).delete();
+}
+
+// ✅ PDF SUMMARIZER
+async function summarizePDF() {
+  const file = document.getElementById("pdfFile").files[0];
+  if (!file) return alert("Select PDF!");
+  const ab = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+  let text = "";
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(item => item.str).join(" ") + "\n";
+  }
+  document.getElementById("summary").innerText =
+    "PDF text length: " + text.length + " characters";
+}
+
+// ✅ GOOGLE SCRAPER (replace URL with your Cloud Function)
+function searchKeyword() {
+  const keyword = document.getElementById("keyword").value.trim();
+  if (!keyword) return alert("Enter keyword!");
+  fetch(`https://us-central1-yourproject.cloudfunctions.net/search?query=${encodeURIComponent(keyword)}`)
+    .then(res => res.json())
+    .then(data => {
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+      data.results.forEach(item => {
+        results.innerHTML += `<p><a href="${item.link}" target="_blank">${item.title}</a></p>`;
+      });
+    })
+    .catch(err => alert("Error fetching results: " + err.message));
+}
+</script>
 
 </body>
 </html>
